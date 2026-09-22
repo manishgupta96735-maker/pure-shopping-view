@@ -6,6 +6,9 @@ import {
   VolumeX,
   Maximize,
   X,
+  Loader2,
+  AlertTriangle,
+  RotateCcw,
 } from "lucide-react";
 
 const VIDEO_ID = "dzuZ-_xscps";
