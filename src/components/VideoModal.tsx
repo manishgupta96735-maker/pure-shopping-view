@@ -295,8 +295,7 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
               </button>
             </div>
           </div>
-          {!ready && <p className="text-xs text-muted-foreground">Loading player…</p>}
-          {muted && ready && (
+          {muted && ready && !error && (
             <p className="text-xs text-muted-foreground">Started muted — tap the sound icon to unmute.</p>
           )}
         </div>
