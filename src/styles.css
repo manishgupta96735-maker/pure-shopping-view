@@ -282,6 +282,45 @@
   background: oklch(1 0 0);
 }
 
+.glass-ctrl,
+.glass-range {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile: large, easy-to-tap video controls (44px+ touch targets) */
+@media (max-width: 640px) {
+  .glass-ctrl {
+    height: 3rem;
+    width: 3rem;
+  }
+  .glass-ctrl svg {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+  .glass-ctrl:active {
+    transform: scale(0.92);
+    background: oklch(1 0 0 / 85%);
+  }
+  .glass-range {
+    height: 1rem;
+    padding: 0;
+  }
+  .glass-range::-webkit-slider-thumb {
+    height: 1.75rem;
+    width: 1.75rem;
+    border: none;
+- }
+  .glass-range::-moz-range-thumb {
+    height: 1.75rem;
+    width: 1.75rem;
+    border: none;
+  }
+  .glass-range::-moz-range-track {
+    height: 1rem;
+  }
+}
+
 @keyframes floaty {
   0%,
   100% {
