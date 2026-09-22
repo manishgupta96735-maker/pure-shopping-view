@@ -221,9 +221,9 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
               <p className="max-w-sm text-sm">{error}</p>
               <button
                 onClick={retry}
-                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-5 py-2 text-sm font-semibold transition-colors hover:bg-white/25"
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-6 py-3 text-sm font-semibold transition-colors hover:bg-white/25 sm:px-5 sm:py-2"
               >
-                <RotateCcw className="size-4" />
+                <RotateCcw className="size-4 sm:size-4" />
                 Retry
               </button>
             </div>
