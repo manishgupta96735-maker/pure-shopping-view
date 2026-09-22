@@ -142,11 +142,15 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
 
     return () => {
       cancelled = true;
+      window.clearTimeout(timeout);
       window.clearTimeout(raf);
       playerRef.current?.destroy?.();
+      playerRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [attempt]);
+
+  const retry = useCallback(() => setAttempt((a) => a + 1), []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
