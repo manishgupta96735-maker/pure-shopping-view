@@ -100,7 +100,9 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
         },
         events: {
           onReady: (e: any) => {
+            window.clearTimeout(timeout);
             setReady(true);
+            setError(null);
             setDuration(e.target.getDuration() || 0);
             e.target.setVolume(volume);
             e.target.mute();
