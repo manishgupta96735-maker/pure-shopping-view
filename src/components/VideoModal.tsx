@@ -204,9 +204,30 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
         className="glass-panel w-full max-w-4xl overflow-hidden rounded-3xl p-3 shadow-2xl sm:p-4"
       >
         <div className="relative w-full overflow-hidden rounded-2xl bg-black pt-[56.25%]">
-          <div className="absolute inset-0">
+          <div className="absolute inset-0" key={attempt}>
             <div ref={holderRef} className="h-full w-full" />
           </div>
+
+          {!ready && !error && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/70 text-white">
+              <Loader2 className="size-7 animate-spin" />
+              <p className="text-sm">Video load ho raha hai…</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/80 px-6 text-center text-white">
+              <AlertTriangle className="size-7" />
+              <p className="max-w-sm text-sm">{error}</p>
+              <button
+                onClick={retry}
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-5 py-2 text-sm font-semibold transition-colors hover:bg-white/25"
+              >
+                <RotateCcw className="size-4" />
+                Retry
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="mt-3 flex flex-col gap-3">
