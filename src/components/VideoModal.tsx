@@ -221,7 +221,8 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
                   setMuted(true);
                 }
               }}
-              className="glass-range w-20 sm:w-28"
+              className="glass-range"
+              style={{ width: "6rem", flex: "none" }}
             />
             <span className="ml-1 text-xs tabular-nums text-muted-foreground">
               {fmt(time)} / {fmt(duration)}
