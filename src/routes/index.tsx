@@ -52,6 +52,17 @@ function Index() {
           <Play className="size-4" />
           WATCH VIDEO
         </button>
+
+        <a
+          href="/?watch=1"
+          onClick={(e) => {
+            e.preventDefault();
+            setOpen(true);
+          }}
+          className="mt-4 text-sm font-medium text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+        >
+          Direct video link
+        </a>
       </div>
 
       {open && <VideoModal onClose={() => setOpen(false)} />}
