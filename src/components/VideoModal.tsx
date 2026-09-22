@@ -62,10 +62,23 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [seeking, setSeeking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     let raf = 0;
+    setReady(false);
+    setError(null);
+    setTime(0);
+
+    const timeout = window.setTimeout(() => {
+      if (!cancelled) {
+        setError((prev) =>
+          prev ?? "Video load hone me samay lag raha hai. Dobara koshish karein.",
+        );
+      }
+    }, 12000);
 
     loadYouTubeApi().then((YT) => {
       if (cancelled || !holderRef.current) return;
