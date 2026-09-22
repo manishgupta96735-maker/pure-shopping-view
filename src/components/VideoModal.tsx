@@ -6,6 +6,9 @@ import {
   VolumeX,
   Maximize,
   X,
+  Loader2,
+  AlertTriangle,
+  RotateCcw,
 } from "lucide-react";
 
 const VIDEO_ID = "dzuZ-_xscps";
@@ -59,10 +62,23 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [seeking, setSeeking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     let raf = 0;
+    setReady(false);
+    setError(null);
+    setTime(0);
+
+    const timeout = window.setTimeout(() => {
+      if (!cancelled) {
+        setError((prev) =>
+          prev ?? "Video load hone me samay lag raha hai. Dobara koshish karein.",
+        );
+      }
+    }, 12000);
 
     loadYouTubeApi().then((YT) => {
       if (cancelled || !holderRef.current) return;
@@ -84,7 +100,9 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
         },
         events: {
           onReady: (e: any) => {
+            window.clearTimeout(timeout);
             setReady(true);
+            setError(null);
             setDuration(e.target.getDuration() || 0);
             e.target.setVolume(volume);
             e.target.mute();
@@ -92,15 +110,25 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
           },
           onStateChange: (e: any) => {
             setPlaying(e.data === 1);
-            if (e.data === 1) setDuration(e.target.getDuration() || 0);
+            if (e.data === 1) {
+              window.clearTimeout(timeout);
+              setReady(true);
+              setError(null);
+              setDuration(e.target.getDuration() || 0);
+            }
             if (e.data === 0) {
               e.target.seekTo(0, true);
               e.target.playVideo();
             }
           },
+          onError: () => {
+            window.clearTimeout(timeout);
+            setError("Video play nahi ho paaya. Dobara koshish karein.");
+          },
         },
       });
     });
+
 
     const tick = () => {
       const p = playerRef.current;
@@ -114,11 +142,15 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
 
     return () => {
       cancelled = true;
+      window.clearTimeout(timeout);
       window.clearTimeout(raf);
       playerRef.current?.destroy?.();
+      playerRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [attempt]);
+
+  const retry = useCallback(() => setAttempt((a) => a + 1), []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -172,9 +204,30 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
         className="glass-panel w-full max-w-4xl overflow-hidden rounded-3xl p-3 shadow-2xl sm:p-4"
       >
         <div className="relative w-full overflow-hidden rounded-2xl bg-black pt-[56.25%]">
-          <div className="absolute inset-0">
+          <div className="absolute inset-0" key={attempt}>
             <div ref={holderRef} className="h-full w-full" />
           </div>
+
+          {!ready && !error && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/70 text-white">
+              <Loader2 className="size-7 animate-spin" />
+              <p className="text-sm">Video load ho raha hai…</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/80 px-6 text-center text-white">
+              <AlertTriangle className="size-7" />
+              <p className="max-w-sm text-sm">{error}</p>
+              <button
+                onClick={retry}
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-5 py-2 text-sm font-semibold transition-colors hover:bg-white/25"
+              >
+                <RotateCcw className="size-4" />
+                Retry
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="mt-3 flex flex-col gap-3">
@@ -242,8 +295,7 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
               </button>
             </div>
           </div>
-          {!ready && <p className="text-xs text-muted-foreground">Loading player…</p>}
-          {muted && ready && (
+          {muted && ready && !error && (
             <p className="text-xs text-muted-foreground">Started muted — tap the sound icon to unmute.</p>
           )}
         </div>
