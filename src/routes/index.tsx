@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
 import shopping3d from "@/assets/shopping-3d.png";
 import { VideoModal } from "@/components/VideoModal";
@@ -26,6 +26,10 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("watch")) setOpen(true);
+  }, []);
 
   return (
     <main className="scene relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-16">
