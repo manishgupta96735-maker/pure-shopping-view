@@ -77,6 +77,8 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
           playsinline: 1,
           disablekb: 1,
           fs: 0,
+          loop: 1,
+          playlist: VIDEO_ID,
           iv_load_policy: 3,
           origin: window.location.origin,
         },
