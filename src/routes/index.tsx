@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
 import shopping3d from "@/assets/shopping-3d.png";
 import { VideoModal } from "@/components/VideoModal";
@@ -27,6 +27,10 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("watch")) setOpen(true);
+  }, []);
+
   return (
     <main className="scene relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-16">
       <div className="blob blob-1" aria-hidden />
@@ -52,6 +56,17 @@ function Index() {
           <Play className="size-4" />
           WATCH VIDEO
         </button>
+
+        <a
+          href="/?watch=1"
+          onClick={(e) => {
+            e.preventDefault();
+            setOpen(true);
+          }}
+          className="mt-4 text-sm font-medium text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+        >
+          Direct video link
+        </a>
       </div>
 
       {open && <VideoModal onClose={() => setOpen(false)} />}

@@ -77,6 +77,8 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
           playsinline: 1,
           disablekb: 1,
           fs: 0,
+          loop: 1,
+          playlist: VIDEO_ID,
           iv_load_policy: 3,
           origin: window.location.origin,
         },
@@ -91,6 +93,10 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
           onStateChange: (e: any) => {
             setPlaying(e.data === 1);
             if (e.data === 1) setDuration(e.target.getDuration() || 0);
+            if (e.data === 0) {
+              e.target.seekTo(0, true);
+              e.target.playVideo();
+            }
           },
         },
       });
