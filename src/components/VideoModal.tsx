@@ -110,15 +110,25 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
           },
           onStateChange: (e: any) => {
             setPlaying(e.data === 1);
-            if (e.data === 1) setDuration(e.target.getDuration() || 0);
+            if (e.data === 1) {
+              window.clearTimeout(timeout);
+              setReady(true);
+              setError(null);
+              setDuration(e.target.getDuration() || 0);
+            }
             if (e.data === 0) {
               e.target.seekTo(0, true);
               e.target.playVideo();
             }
           },
+          onError: () => {
+            window.clearTimeout(timeout);
+            setError("Video play nahi ho paaya. Dobara koshish karein.");
+          },
         },
       });
     });
+
 
     const tick = () => {
       const p = playerRef.current;
